@@ -1,10 +1,26 @@
 #include "FordFulkersonGraph.h"
 
+/*
+    Metodo: Constructor
+    Descripcion: este metodo permite crear un grafo de Ford Fulkerson
+        sin inicializar sus valores.
+    Parametros: no posee.
+    Retorno: La direccion del objeto creado.
+*/
 FordFulkersonGraph::FordFulkersonGraph()
 {
 
 }
 
+/*
+    Metodo: Constructor
+    Descripcion: este metodo permite crear un grafo de Ford Fulkerson
+        agregando los nodos y aristas necesarias que se presentan en
+        el archivo con el nombre dado.
+    Parametros:
+        -fileName: nombre del archivo que contiene los datos del grafo.
+    Retorno: La direccion del objeto creado.
+*/
 FordFulkersonGraph::FordFulkersonGraph(std::string fileName)
 {
     std::string line;
@@ -56,13 +72,21 @@ FordFulkersonGraph::~FordFulkersonGraph()
     
 }
 
+/*
+    Metodo:
+    Descripcion: este metodo permite imprimir por consola el grafo
+        tomando en cuenta solo las aristas que tienen capacidad
+        mayor a 0.
+    Parametros: no posee.
+    Retorno: vacio.
+*/
 void FordFulkersonGraph::print()
 {
     for(size_t i = 0; i < ffGraph.size(); i++)
     {
         for(size_t j = 0; j < ffGraph[i].size(); j++)
         {
-            if(ffGraph[i][j].capacity != 0)
+            if(ffGraph[i][j].capacity > 0)
             {
                 std::cout << i << " -> " << ffGraph[i][j].node << " capacidad: " << ffGraph[i][j].capacity << std::endl;
             }

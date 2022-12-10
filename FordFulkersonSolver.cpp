@@ -1,5 +1,13 @@
 #include "FordFulkersonSolver.h"
 
+/*
+    Metodo: Constructor
+    Descripcion: este metodo permite crear un solucionador de 
+        problemas de maximo flujo mediante el metodo
+        de FordFulkerson.
+    Parametros: no posee.
+    Retorno: La direccion del objeto creado.
+*/
 FordFulkersonSolver::FordFulkersonSolver()
 {
 }
@@ -8,6 +16,14 @@ FordFulkersonSolver::~FordFulkersonSolver()
 {
 }
 
+/*
+    Metodo: 
+    Descripcion: este metodo permite resolver el problema de
+        maximo flujo mediante el metodo de Ford Fulkerson.
+    Parametros:
+        -graph: grafo a resolver.
+    Retorno: flujo maximo posible del grafo.
+*/
 int FordFulkersonSolver::solve(FordFulkersonGraph graph)
 {
     parent.clear();
@@ -44,6 +60,18 @@ int FordFulkersonSolver::solve(FordFulkersonGraph graph)
     return maxFlow;
 }
 
+/*
+    Metodo:
+    Descripcion: este metodo permite buscar y saber si existe un 
+        camino posible en el grafo desde un punto de partida
+        hasta un punto final, esto utilizando el metodo de 
+        busqueda en anchura.
+    Parametros:
+        -graph: grafo en el cual se buscara un posible camino.
+    Retorno: 
+        -true: si es que existe un camino posible.
+        -false: si NO existe un camino posible.
+*/
 bool FordFulkersonSolver::bfs(FordFulkersonGraph graph)
 {
     bool visited[graph.numNodes];

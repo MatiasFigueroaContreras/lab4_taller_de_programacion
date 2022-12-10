@@ -1,5 +1,12 @@
 #include "MBPSolver.h"
 
+/*
+    Metodo: Constructor
+    Descripcion: este metodo permite crear un Solucionador
+        de problemas de maxima asignacion bipartita.
+    Parametros: no posee.
+    Retorno: La direccion del objeto creado.
+*/
 MBPSolver::MBPSolver()
 {
 
@@ -10,6 +17,17 @@ MBPSolver::~MBPSolver()
 
 }
 
+/*
+    Metodo: 
+    Descripcion: este metodo permite crear un grafo de Ford Fulkerson
+        agregando los nodos y aristas necesarias que se presentan en
+        el archivo el cual contendra el grafo en el formato de un
+        problema bipartito, es decir conexiones entre un grupo
+        de nodos a otro.
+    Parametros:
+        -fileName: nombre del archivo que contiene los datos del grafo.
+    Retorno: El grafo Ford Fulkerson
+*/
 FordFulkersonGraph MBPSolver::loadGraph(std::string fileName)
 {
     std::string line;
@@ -96,6 +114,15 @@ FordFulkersonGraph MBPSolver::loadGraph(std::string fileName)
     return graph;
 }
 
+/*
+    Metodo:
+    Descripcion: este metodo permite resolver un problema 
+        de maxima asignacion bipartita, utilizando el metodo
+        de FordFulkerson y el grafo generado.
+    Parametros:
+        -graph: grafo a resolver.
+    Retorno: la maxima asignacion de pares.
+*/
 int MBPSolver::solve(FordFulkersonGraph graph)
 {
     return FordFulkersonSolver().solve(graph);
