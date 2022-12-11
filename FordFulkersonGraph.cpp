@@ -9,7 +9,6 @@
 */
 FordFulkersonGraph::FordFulkersonGraph()
 {
-
 }
 
 /*
@@ -28,7 +27,7 @@ FordFulkersonGraph::FordFulkersonGraph(std::string fileName)
     std::stringstream charStream;
     std::string stringNumber;
 
-    if(!txtStream.is_open())
+    if (!txtStream.is_open())
     {
         throw std::invalid_argument("El archivo ingresado no existe.");
     }
@@ -36,15 +35,15 @@ FordFulkersonGraph::FordFulkersonGraph(std::string fileName)
     int startingNode, arrivalNode;
     getline(txtStream, stringNumber);
     this->numNodes = stoi(stringNumber);
-    this->startNode = 0;
-    this->endNode = numNodes - 1;
+    this->sourceNode = 0;
+    this->sinkNode = numNodes - 1;
     for (int i = 0; i < numNodes; i++)
     {
         std::vector<FordFulkersonData> edges;
         this->ffGraph.push_back(edges);
     }
 
-    while(getline(txtStream, line))
+    while (getline(txtStream, line))
     {
         charStream.clear();
         charStream << line;
@@ -69,7 +68,6 @@ FordFulkersonGraph::FordFulkersonGraph(std::string fileName)
 
 FordFulkersonGraph::~FordFulkersonGraph()
 {
-    
 }
 
 /*
@@ -82,11 +80,11 @@ FordFulkersonGraph::~FordFulkersonGraph()
 */
 void FordFulkersonGraph::print()
 {
-    for(size_t i = 0; i < ffGraph.size(); i++)
+    for (size_t i = 0; i < ffGraph.size(); i++)
     {
-        for(size_t j = 0; j < ffGraph[i].size(); j++)
+        for (size_t j = 0; j < ffGraph[i].size(); j++)
         {
-            if(ffGraph[i][j].capacity > 0)
+            if (ffGraph[i][j].capacity > 0)
             {
                 std::cout << i << " -> " << ffGraph[i][j].node << " capacidad: " << ffGraph[i][j].capacity << std::endl;
             }

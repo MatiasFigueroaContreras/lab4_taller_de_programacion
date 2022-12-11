@@ -9,16 +9,14 @@
 */
 MBPSolver::MBPSolver()
 {
-
 }
 
 MBPSolver::~MBPSolver()
 {
-
 }
 
 /*
-    Metodo: 
+    Metodo:
     Descripcion: este metodo permite crear un grafo de Ford Fulkerson
         agregando los nodos y aristas necesarias que se presentan en
         el archivo el cual contendra el grafo en el formato de un
@@ -54,8 +52,8 @@ FordFulkersonGraph MBPSolver::loadGraph(std::string fileName)
         std::vector<FordFulkersonData> edges;
         graph.ffGraph.push_back(edges);
     }
-    graph.startNode = 0;
-    graph.endNode = graph.numNodes - 1;
+    graph.sourceNode = 0;
+    graph.sinkNode = graph.numNodes - 1;
 
     while (getline(txtStream, line))
     {
@@ -63,10 +61,10 @@ FordFulkersonGraph MBPSolver::loadGraph(std::string fileName)
         charStream << line;
         FordFulkersonData data, dataReverse;
         getline(charStream, stringNumber, ' ');
-        processor = stoi(stringNumber) + 1; // Los porcesadores parten de 1 en adelante
+        processor = stoi(stringNumber) + 1; // Los procesadores parten de 1 en adelante
         getline(charStream, stringNumber, ' ');
         task = stoi(stringNumber) + numProcessors + 1; // Las tareas parten del numero total de procesadores en adelante
-        
+
         // Informacion de la conexion entre procesador y tarea
         data.capacity = 1;
         data.node = task;
@@ -80,35 +78,38 @@ FordFulkersonGraph MBPSolver::loadGraph(std::string fileName)
         graph.ffGraph[task].push_back(dataReverse);
     }
 
-    for(int i = 1; i <= numProcessors; i++)
+    for (processor = 1; processor <= numProcessors; processor++)
     {
-        FordFulkersonData startingData, startingDataReverse, endData, endDataReverse;
-        processor = i;
-        task = i + numProcessors;
+        FordFulkersonData startingData, startingDataReverse;
 
         // Informacion de la conexion entre el nodo inicial y el procesador
         startingData.capacity = 1;
         startingData.node = processor;
-        startingData.pos = graph.ffGraph[graph.startNode].size();
+        startingData.pos = graph.ffGraph[graph.sourceNode].size();
         startingData.posReverseDirection = graph.ffGraph[processor].size();
         startingDataReverse.capacity = 0;
-        startingDataReverse.node = graph.startNode;
+        startingDataReverse.node = graph.sourceNode;
         startingDataReverse.pos = startingData.posReverseDirection;
         startingDataReverse.posReverseDirection = startingData.pos;
-        graph.ffGraph[graph.startNode].push_back(startingData);
+        graph.ffGraph[graph.sourceNode].push_back(startingData);
         graph.ffGraph[processor].push_back(startingDataReverse);
+    }
+
+    for (task = numProcessors + 1; task <= numProcessors + numTasks; task++)
+    {
+        FordFulkersonData startingData, startingDataReverse;
 
         // Informacion de la conexion entre la tarea y el nodo final
         startingData.capacity = 1;
-        startingData.node = graph.endNode;
+        startingData.node = graph.sinkNode;
         startingData.pos = graph.ffGraph[task].size();
-        startingData.posReverseDirection = graph.ffGraph[graph.endNode].size();
+        startingData.posReverseDirection = graph.ffGraph[graph.sinkNode].size();
         startingDataReverse.capacity = 0;
         startingDataReverse.node = task;
         startingDataReverse.pos = startingData.posReverseDirection;
         startingDataReverse.posReverseDirection = startingData.pos;
         graph.ffGraph[task].push_back(startingData);
-        graph.ffGraph[graph.endNode].push_back(startingDataReverse);
+        graph.ffGraph[graph.sinkNode].push_back(startingDataReverse);
     }
 
     return graph;
@@ -116,7 +117,7 @@ FordFulkersonGraph MBPSolver::loadGraph(std::string fileName)
 
 /*
     Metodo:
-    Descripcion: este metodo permite resolver un problema 
+    Descripcion: este metodo permite resolver un problema
         de maxima asignacion bipartita, utilizando el metodo
         de FordFulkerson y el grafo generado.
     Parametros:

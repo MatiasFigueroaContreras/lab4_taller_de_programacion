@@ -26,11 +26,11 @@ FordFulkersonSolver::~FordFulkersonSolver()
 */
 int FordFulkersonSolver::solve(FordFulkersonGraph graph)
 {
-    parent.clear();
+    sinkPath.clear();
     for (int i = 0; i < graph.numNodes; i++)
     {
         FordFulkersonData ffdata;
-        parent.push_back(std::make_pair(-1, ffdata));
+        sinkPath.push_back(std::make_pair(-1, ffdata));
     }
 
     int maxFlow = 0;
@@ -38,18 +38,17 @@ int FordFulkersonSolver::solve(FordFulkersonGraph graph)
     while (bfs(graph))
     {
         int pathFlow = INT_MAX;
-        for (int arrivalNode = graph.endNode; arrivalNode != graph.startNode; arrivalNode = parent[arrivalNode].first)
+        for (int arrivalNode = graph.sinkNode; arrivalNode != graph.sourceNode; arrivalNode = sinkPath[arrivalNode].first)
         {
-            int startingNode = parent[arrivalNode].first;
-            FordFulkersonData arrivalNodeData = parent[arrivalNode].second;
-            // std::cout << startingNode << " -> " << arrivalNodeData.node << std::endl;
+            int startingNode = sinkPath[arrivalNode].first;
+            FordFulkersonData arrivalNodeData = sinkPath[arrivalNode].second;
             pathFlow = std::min(pathFlow, graph.ffGraph[startingNode][arrivalNodeData.pos].capacity);
         }
 
-        for (int arrivalNode = graph.endNode; arrivalNode != graph.startNode; arrivalNode = parent[arrivalNode].first)
+        for (int arrivalNode = graph.sinkNode; arrivalNode != graph.sourceNode; arrivalNode = sinkPath[arrivalNode].first)
         {
-            int startingNode = parent[arrivalNode].first;
-            FordFulkersonData arrivalNodeData = parent[arrivalNode].second;
+            int startingNode = sinkPath[arrivalNode].first;
+            FordFulkersonData arrivalNodeData = sinkPath[arrivalNode].second;
             graph.ffGraph[startingNode][arrivalNodeData.pos].capacity -= pathFlow;
             graph.ffGraph[arrivalNode][arrivalNodeData.posReverseDirection].capacity += pathFlow;
         }
@@ -78,10 +77,10 @@ bool FordFulkersonSolver::bfs(FordFulkersonGraph graph)
     std::memset(visited, 0, sizeof(visited));
 
     std::queue<int> nodesToExplore;
-    nodesToExplore.push(graph.startNode);
-    visited[graph.startNode] = true;
+    nodesToExplore.push(graph.sourceNode);
+    visited[graph.sourceNode] = true;
     FordFulkersonData empty;
-    parent[graph.startNode] = std::make_pair(-1, empty);
+    sinkPath[graph.sourceNode] = std::make_pair(-1, empty);
 
     while (!nodesToExplore.empty())
     {
@@ -93,9 +92,8 @@ bool FordFulkersonSolver::bfs(FordFulkersonGraph graph)
             FordFulkersonData arrivalNodeData = graph.ffGraph[startingNode][j];
             if (visited[arrivalNodeData.node] == false && arrivalNodeData.capacity > 0)
             {
-                // std::cout << startingNode << " -> " << arrivalNodeData.node << std::endl;
-                parent[arrivalNodeData.node] = std::make_pair(startingNode, arrivalNodeData);
-                if (arrivalNodeData.node == graph.endNode)
+                sinkPath[arrivalNodeData.node] = std::make_pair(startingNode, arrivalNodeData);
+                if (arrivalNodeData.node == graph.sinkNode)
                 {
                     return true;
                 }
